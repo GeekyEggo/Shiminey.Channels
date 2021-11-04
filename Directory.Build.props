@@ -1,0 +1,6 @@
+<Project>
+    <PropertyGroup>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<LangVersion>latest</LangVersion>
+    </PropertyGroup>
+</Project>

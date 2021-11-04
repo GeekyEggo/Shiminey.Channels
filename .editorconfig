@@ -1,0 +1,21 @@
+﻿[*.cs]
+
+# IDE0061: Use block body for local functions
+csharp_style_expression_bodied_local_functions = false
+csharp_using_directive_placement=inside_namespace:silent
+csharp_style_expression_bodied_constructors=when_on_single_line:silent
+csharp_style_expression_bodied_lambdas=when_on_single_line:silent
+csharp_style_expression_bodied_accessors=when_on_single_line:silent
+csharp_style_expression_bodied_indexers=when_on_single_line:silent
+csharp_style_expression_bodied_properties=when_on_single_line:silent
+csharp_style_expression_bodied_methods=when_on_single_line:silent
+
+dotnet_diagnostic.IDE0061.severity = none
+dotnet_diagnostic.IDE0090.severity = none
+insert_final_newline=true
+
+[*.{cs,vb}]
+dotnet_style_qualification_for_field=true:silent
+dotnet_style_qualification_for_property=true:silent
+dotnet_style_qualification_for_method=true:silent
+dotnet_style_qualification_for_event=true:silent
