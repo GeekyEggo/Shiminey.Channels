@@ -11,6 +11,8 @@
             this.Node = node;
         }
 
+        public T Value => this.Node.Value;
+
         private LinkedListNode<T> Node { get; set; }
         private ConcurrentOrderableQueue<T> Parent { get; }
 

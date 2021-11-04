@@ -5,81 +5,117 @@
     using System.Threading.Tasks;
     using Shiminey.Channels.Threading;
 
+    /// <summary>
+    /// Represents a first-in, first-out collection of objects whose order can be mutated.
+    /// </summary>
+    /// <typeparam name="T">Specifies the type of elements in the queue.</typeparam>
     internal class ConcurrentOrderableQueue<T>
     {
+        /// <summary>
+        /// Gets the number of elements contained in the <see cref="ConcurrentOrderableQueue{T}"/>.
+        /// </summary>
         public int Count
         {
             get
             {
                 lock (this.SyncRoot)
                 {
-                    return this.Queue.Count;
+                    return this.Items.Count;
                 }
             }
         }
-        internal object SyncRoot { get; } = new object();
-        private TaskCompletionSource<T> ItemEnqueuedTaskCompletionSource { get; set; } = new TaskCompletionSource<T>();
-        private LinkedList<T> Queue { get; } = new LinkedList<T>();
 
+        /// <summary>
+        /// Gets the shared synchronization root.
+        /// </summary>
+        internal object SyncRoot { get; } = new object();
+
+        /// <summary>
+        /// Gets the linked list that represents the underlying queue.
+        /// </summary>
+        private LinkedList<T> Items { get; } = new LinkedList<T>();
+
+        /// <summary>
+        /// Gets or sets the the task completion source that is fulfilled when the <see cref="ConcurrentOrderableQueue{T}"/> is not empty.
+        /// </summary>
+        private TaskCompletionSource<T> NotEmptyTaskCompletionSource { get; set; } = new TaskCompletionSource<T>();
+
+        /// <summary>
+        /// Removes all items from the <see cref="ConcurrentOrderableQueue{T}"/>.
+        /// </summary>
         public void Clear()
         {
             lock (this.SyncRoot)
             {
-                this.Queue.Clear();
+                this.Items.Clear();
             }
         }
 
+        /// <summary>
+        /// Adds the specified <paramref name="item"/> to the end of the <see cref="ConcurrentOrderableQueue{T}"/>.
+        /// </summary>
+        /// <param name="item">The item to add.</param>
+        /// <returns>The orderable item that allows for repositioning of the item in the <see cref="ConcurrentOrderableQueue{T}"/>.</returns>
         public OrderableQueueItem<T> Enqueue(T item)
         {
             lock (this.SyncRoot)
             {
-                var enqueuedItem = new OrderableQueueItem<T>(this, this.Queue.AddLast(item));
-                this.ItemEnqueuedTaskCompletionSource?.TrySetResult(item);
+                var enqueuedItem = new OrderableQueueItem<T>(this, this.Items.AddLast(item));
+                this.NotEmptyTaskCompletionSource?.TrySetResult(item);
 
                 return enqueuedItem;
             }
         }
 
-        public bool TryDequeue(out T item)
+        /// <summary>
+        /// Removes the item at the beginning of the <see cref="ConcurrentOrderableQueue{T}"/> and copies it to the result parameter.
+        /// </summary>
+        /// <param name="result">The removed item.</param>
+        /// <returns><c>true</c> if the item was successfully removed; <c>false</c> if <see cref="ConcurrentOrderableQueue{T}"/> is empty.</returns>
+        public bool TryDequeue(out T result)
         {
             lock (this.SyncRoot)
             {
-                if (this.Queue.Count == 0)
+                if (this.Items.Count == 0)
                 {
-                    item = default;
+                    result = default;
                     return false;
                 }
 
-                item = this.Queue.First.Value;
-                this.Queue.RemoveFirst();
+                result = this.Items.First.Value;
+                this.Items.RemoveFirst();
 
-                if (this.Queue.Count == 0
-                    && this.ItemEnqueuedTaskCompletionSource.Task.IsCompleted)
+                if (this.Items.Count == 0
+                    && this.NotEmptyTaskCompletionSource.Task.IsCompleted)
                 {
-                    this.ItemEnqueuedTaskCompletionSource = new TaskCompletionSource<T>();
+                    this.NotEmptyTaskCompletionSource = new TaskCompletionSource<T>();
                 }
 
                 return true;
             }
         }
 
-        public async Task WaitPeekAsync(CancellationToken cancellationToken = default)
+        /// <summary>
+        /// Waits the <see cref="ConcurrentOrderableQueue{T}"/> to contain an item which can be read asynchronously.
+        /// </summary>
+        /// <param name="cancellationToken">The optional cancellation token.</param>
+        public async Task WaitToReadAsync(CancellationToken cancellationToken = default)
         {
             Task task;
             lock (this.SyncRoot)
             {
-                if (this.Queue.Count > 0)
+                if (this.Items.Count > 0)
                 {
                     return;
                 }
 
-                task = this.ItemEnqueuedTaskCompletionSource.Task;
+                task = this.NotEmptyTaskCompletionSource.Task;
             }
 
             using var cts = new CancellationTokenTaskSource(cancellationToken);
             {
-                await Task.WhenAny(task, cts.Task)
-                    .ConfigureAwait(false);
+                await Task.WhenAny(task, cts.Task).ConfigureAwait(false);
+                cancellationToken.ThrowIfCancellationRequested();
             }
         }
     }

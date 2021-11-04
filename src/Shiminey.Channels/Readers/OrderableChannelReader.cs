@@ -17,7 +17,7 @@
 
         public override async ValueTask<bool> WaitToReadAsync(CancellationToken cancellationToken = default)
         {
-            await this.Items.WaitPeekAsync(cancellationToken);
+            await this.Items.WaitToReadAsync(cancellationToken);
             return true;
         }
     }
