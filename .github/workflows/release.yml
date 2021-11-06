@@ -30,7 +30,7 @@ jobs:
       run: dotnet build
 
     - name: Test
-      run: dotnet test 
+      run: dotnet test
 
     - name: Get version
       id: branch_name
@@ -39,14 +39,7 @@ jobs:
     - name: Pack
       run: dotnet pack -p:Version=${{ steps.branch_name.outputs.TAG }} -p:PackageOutputPath="../../dist" -p:ContinuousIntegrationBuild=true
 
-    - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v2
-      with:
-        name: package
-        path: dist/*
-        retention-days: 1
-
-#    - name: Push to NuGet
-#      env:
-#        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-#      run: dotnet nuget push **/dist/*.nupkg -k "$NUGET_API_KEY" -s https://api.nuget.org/v3/index.json --no-symbols true --skip-duplicate
+    - name: Push to NuGet
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push "./dist/*.nupkg" -k "$NUGET_API_KEY" -s https://api.nuget.org/v3/index.json --skip-duplicate
