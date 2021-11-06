@@ -1,10 +1,13 @@
 ﻿namespace Shiminey.Channels.Tests.Collections
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using NUnit.Framework;
     using Shiminey.Channels.Collections;
+    using Shiminey.Channels.Tests.Helpers;
 
     /// <summary>
     /// Provides tests for <see cref="ConcurrentOrderableQueue{T}"/>.
@@ -12,6 +15,17 @@
     [TestFixture]
     public class ConcurrentOrderableQueueTests
     {
+        /// <summary>
+        /// Tests <see cref="ConcurrentOrderableQueue{T}.ConcurrentOrderableQueue(T[])"/>.
+        /// </summary>
+        [Test]
+        public void Constructor()
+        {
+            // Given, when, then.
+            var queue = new ConcurrentOrderableQueue<string>("One", "Two", "Three");
+            QueueAssert.AreEqual(new[] { "One", "Two", "Three" }, queue);
+        }
+
         /// <summary>
         /// Tests <see cref="ConcurrentOrderableQueue{T}.Clear"/>.
         /// </summary>
@@ -29,11 +43,12 @@
             queue.Clear();
             Assert.AreEqual(0, queue.Count);
         }
+
         /// <summary>
-        /// Tests <see cref="ConcurrentOrderableQueue{T}.Enqueue(T)"/>, <see cref="ConcurrentOrderableQueue{T}.Count"/>, and <see cref="ConcurrentOrderableQueue{T}.TryDequeue(out T)"/>.
+        /// Tests <see cref="ConcurrentOrderableQueue{T}.Enqueue(T)"/>.
         /// </summary>
         [Test]
-        public void EnqueueAndTryDequeue()
+        public void Enqueue()
         {
             // Given.
             var queue = new ConcurrentOrderableQueue<string>();
@@ -42,19 +57,72 @@
             queue.Enqueue("Three");
 
             // When, then.
-            Assert.AreEqual(3, queue.Count);
+            QueueAssert.AreEqual(new[] { "One", "Two", "Three" }, queue);
+        }
 
-            Assert.IsTrue(queue.TryDequeue(out var item));
-            Assert.AreEqual("One", item);
+        /// <summary>
+        /// Tests <see cref="IEnumerable{T}.GetEnumerator"/>.
+        /// </summary>
+        [Test]
+        public void Enumerator_Generic()
+        {
+            // Given.
+            var items = new[] { "One", "Two", "Three" };
+            var queue = new ConcurrentOrderableQueue<string>(items);
 
-            Assert.IsTrue(queue.TryDequeue(out item));
-            Assert.AreEqual("Two", item);
+            // When, then.
+            var count = 0;
+            foreach (var item in (IEnumerable<string>)queue)
+            {
+                Assert.AreEqual(items[count], item);
+                count++;
+            }
 
-            Assert.IsTrue(queue.TryDequeue(out item));
-            Assert.AreEqual("Three", item);
+            Assert.AreEqual(3, count);
+        }
 
-            Assert.IsFalse(queue.TryDequeue(out item));
-            Assert.IsNull(item);
+        /// <summary>
+        /// Tests <see cref="IEnumerable.GetEnumerator"/>.
+        /// </summary>
+        [Test]
+        public void Enumerator_NonGeneric()
+        {
+            // Given.
+            var items = new[] { "One", "Two", "Three" };
+            var queue = new ConcurrentOrderableQueue<string>(items);
+
+            // When, then.
+            var count = 0;
+            foreach (var item in (IEnumerable)queue)
+            {
+                Assert.AreEqual(items[count], item);
+                count++;
+            }
+
+            Assert.AreEqual(3, count);
+        }
+
+        /// <summary>
+        /// Tests <see cref="ConcurrentOrderableQueue{T}.TryDequeue(out T)"/>.
+        /// </summary>
+        [Test]
+        public void TryDequeue()
+        {
+            // Given.
+            var queue = new ConcurrentOrderableQueue<string>("One", "Two", "Three");
+
+            // When.
+            var dequeueCount = 0;
+            for (var i = queue.Count - 1; i >= 0; i--)
+            {
+                Assert.IsTrue(queue.TryDequeue(out var _));
+                dequeueCount++;
+            }
+
+            // Then.
+            Assert.AreEqual(3, dequeueCount);
+            Assert.AreEqual(0, queue.Count);
+            Assert.IsFalse(queue.TryDequeue(out var _));
         }
 
         /// <summary>

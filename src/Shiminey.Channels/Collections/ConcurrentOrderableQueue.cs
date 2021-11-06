@@ -1,5 +1,6 @@
 ﻿namespace Shiminey.Channels.Collections
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
@@ -9,8 +10,20 @@
     /// Represents a first-in, first-out collection of objects whose order can be mutated.
     /// </summary>
     /// <typeparam name="T">Specifies the type of elements in the queue.</typeparam>
-    internal class ConcurrentOrderableQueue<T>
+    internal class ConcurrentOrderableQueue<T> : IEnumerable<T>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConcurrentOrderableQueue{T}"/> class.
+        /// </summary>
+        /// <param name="collection">The initial collection.</param>
+        public ConcurrentOrderableQueue(params T[] collection)
+        {
+            foreach (var item in collection)
+            {
+                this.Items.AddLast(item);
+            }
+        }
+
         /// <summary>
         /// Gets the number of elements contained in the <see cref="ConcurrentOrderableQueue{T}"/>.
         /// </summary>
@@ -56,14 +69,30 @@
         /// </summary>
         /// <param name="item">The item to add.</param>
         /// <returns>The orderable item that allows for repositioning of the item in the <see cref="ConcurrentOrderableQueue{T}"/>.</returns>
-        public OrderableQueueItem<T> Enqueue(T item)
+        public ConcurrentOrderableQueueItemController<T> Enqueue(T item)
         {
             lock (this.SyncRoot)
             {
-                var enqueuedItem = new OrderableQueueItem<T>(this, this.Items.AddLast(item));
+                var enqueuedItem = new ConcurrentOrderableQueueItemController<T>(this, this.Items.AddLast(item));
                 this.NotEmptyTaskCompletionSource?.TrySetResult(item);
 
                 return enqueuedItem;
+            }
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>An enumerator that can be used to iterate through the collection.</returns>
+        public IEnumerator<T> GetEnumerator()
+        {
+            lock (this.SyncRoot)
+            {
+                var enumerator = this.Items.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    yield return enumerator.Current;
+                }
             }
         }
 
@@ -118,5 +147,12 @@
                 cancellationToken.ThrowIfCancellationRequested();
             }
         }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through a collection.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerator"></see> object that can be used to iterate through the collection.</returns>
+        IEnumerator IEnumerable.GetEnumerator()
+            => this.GetEnumerator();
     }
 }

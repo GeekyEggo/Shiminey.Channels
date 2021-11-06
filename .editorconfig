@@ -13,6 +13,7 @@ csharp_style_expression_bodied_methods=when_on_single_line:silent
 dotnet_diagnostic.IDE0061.severity = none
 dotnet_diagnostic.IDE0090.severity = none
 insert_final_newline=true
+csharp_prefer_simple_using_statement=false:suggestion
 
 [*.{cs,vb}]
 dotnet_style_qualification_for_field=true:silent
