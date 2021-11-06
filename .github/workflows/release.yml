@@ -32,7 +32,8 @@ jobs:
     - name: Test
       run: dotnet test 
 
-    - id: branch_name
+    - name: Get version
+      id: branch_name
       run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/v}
 
     - name: Pack

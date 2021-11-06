@@ -5,11 +5,11 @@
     <IncludeSymbols>true</IncludeSymbols>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	<Authors>Richard Herman</Authors>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+	  <Authors>Richard Herman</Authors>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>    
     <PackageProjectUrl>https://github.com/GeekyEggo/Shiminey.Channels</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GeekyEggo/Shiminey.Channels</RepositoryUrl>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>Shiminey.Channels is a lightweight set of classes designed to extend and complement the existing System.Threading.Channels library, with a focus on allowing greater control of ordering elements within a channel.</Description>
     <PackageTags>dotnet,threading,channels</PackageTags>
   </PropertyGroup>
@@ -19,8 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-	<None Include="..\..\README.md" Pack="true" PackagePath="\"/>
-    <None Include="..\..\LICENSE.md" Pack="true" PacakgePath="\"/>
+	  <None Include="..\..\README.md" Pack="true" PackagePath=""/>
+    <None Include="..\..\LICENSE.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 
 </Project>
