@@ -7,6 +7,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 	  <Authors>Richard Herman</Authors>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>    
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/GeekyEggo/Shiminey.Channels</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GeekyEggo/Shiminey.Channels</RepositoryUrl>
     <Description>A lightweight set of classes designed to extend and complement the existing System.Threading.Channels library, with a focus on allowing greater control of ordering elements within a channel.</Description>
@@ -23,6 +24,7 @@
 
   <ItemGroup>
     <None Include="..\..\LICENSE.md" Pack="true" PackagePath="" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
