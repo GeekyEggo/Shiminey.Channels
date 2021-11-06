@@ -1,0 +1,35 @@
+name: build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '5.0.x'
+
+    - name: Build
+      run: dotnet build
+
+    - name: Test
+      run: dotnet test -p:CollectCoverage=true -p:CoverletOutput="../../TestResults/" -p:CoverletOutputFormat=opencover --no-build --verbosity normal
+
+    - name: Create test coverage badge
+      uses: simon-k/dotnet-code-coverage-badge@v1.0.0
+      id: create_coverage_badge
+      with:
+        label: coverage
+        color: brightgreen
+        path: ./TestResults/coverage.opencover.xml
+        gist-filename: shiminey.channels-coverage.json
+        gist-id: ea47b909ef1163bf584b62b1f80f7496
+        gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}
+
+    - name: Code coverage results
+      run: echo "Code coverage percentage ${{steps.create_coverage_badge.outputs.percentage}}%"

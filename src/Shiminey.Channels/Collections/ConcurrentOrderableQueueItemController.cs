@@ -8,7 +8,7 @@
     /// Provides methods for controlling the position of an item within a <see cref="ConcurrentOrderableQueue{T}"/>.
     /// </summary>
     /// <typeparam name="T">The type of elements in the <see cref="ConcurrentOrderableQueue{T}"/>.</typeparam>
-    internal class ConcurrentOrderableQueueItemController<T> : IOrderableChannelItem
+    internal class ConcurrentOrderableQueueItemController<T> : IChannelItemController
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcurrentOrderableQueueItemController{T}"/> class.
