@@ -2,26 +2,27 @@
 ![Test coverage badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/geekyeggo/ea47b909ef1163bf584b62b1f80f7496/raw/shiminey.channels-coverage.json)
 [![Twitter icon](https://img.shields.io/badge/GeekyEggo--brightgreen?style=social&logo=twitter)](https://www.twitter.com/geekyeggo)
 
-## :dna: Shiminey.Channels
+## 🧬 Shiminey.Channels
 
-Shiminey.Channels provides a lightweight set of classes that are designed to complement the existing [System.Threading.Channels](https://www.nuget.org/packages/System.Threading.Channels) library, with the added ability to order data within a channel in a thread-safe way.
+Shiminey.Channels is a lightweight set of classes designed to extend and complement the existing [System.Threading.Channels](https://www.nuget.org/packages/System.Threading.Channels) library, with a focus on allowing greater control of ordering elements within a channel.
 
-## :memo: Use Case
+## 📝 Use Case
 
 Imagine an application that allows users to download files concurrently; the application also allows users to define a degree of parallelism, i.e. 4 downloads can happen at the same time.
 
 The application utilizes a single channel that contains pending downloads, however, what were to happen if the user wished to change the priority of these downloads, i.e. skip or "download now"? Using the default implementation of channels we aren't able to do anything, however with Shiminey, we can solve this problem.
 
-## :twisted_rightwards_arrows: How It Works
+## 🔀 How It Works
 
 In addition to the standard `TryWrite(T item)` offered from channel writers, Shiminey exposes a new `TryWriteOrderable(T item, out IChannelItemController controller)` method. With this `controller` it becomes possible to re-position the data within the channel:
 
-- :next_track_button: `TryMoveFirst()` - _Attempts to move the item to the front._
-- :fast_forward: `TryMoveForward()` - _Attempts to increase the priority of the item by bring it forward one place._
-- :previous_track_button: `TryMoveLast()` - _Attempts to move the item the end._
-- :rewind: `TryMoveBackward()` - _Attempts to decrease the priority of the item by moving it backwards one place._
+- ⏭️ `TryMoveFirst()` - _Attempts to move the item to the front._
+- ⏩ `TryMoveForward()` - _Attempts to increase the priority of the item by bring it forward one place._
+- ⏮️ `TryMoveLast()` - _Attempts to move the item the end._
+- ⏪ `TryMoveBackward()` - _Attempts to decrease the priority of the item by moving it backwards one place._
 
-## :tada: Basic Usage
+## 🎉 Basic Usage
+
 ```csharp
 using Shiminey.Channels;
 
