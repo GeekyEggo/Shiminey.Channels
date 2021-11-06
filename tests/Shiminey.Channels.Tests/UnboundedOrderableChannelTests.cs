@@ -52,5 +52,27 @@
 
             await assertWaiter;
         }
+
+        /// <summary>
+        /// Tests the README example.
+        /// </summary>
+        [Test]
+        public async Task Example()
+        {
+            // Create a channel, and write two items to it.
+            var channel = Channel.CreateUnboundedOrderableChannel<string>();
+            channel.Writer.TryWrite("One");
+            channel.Writer.TryWriteOrderable("Two", out var twoController);
+
+            // The controller allows us to relocate the item within the channel.
+            twoController.TryMoveFirst();
+
+            string item;
+            item = await channel.Reader.ReadAsync(); // Two
+            Assert.AreEqual("Two", item);
+
+            item = await channel.Reader.ReadAsync(); // One
+            Assert.AreEqual("One", item);
+        }
     }
 }
