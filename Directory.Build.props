@@ -3,7 +3,7 @@
     <PropertyGroup>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<LangVersion>latest</LangVersion>
-        <TargetFrameworkMonikerAssemblyAttributesPath>$([System.IO.Path]::Combine('$(IntermediateOutputPath)','$(TargetFrameworkMoniker).AssemblyAttributes$(DefaultLanguageSourceExtension)'))</TargetFrameworkMonikerAssemblyAttributesPath>
+		<TargetFrameworkMonikerAssemblyAttributesPath>$([System.IO.Path]::Combine('$(IntermediateOutputPath)','$(TargetFrameworkMoniker)Properties/AssemblyAttributes.cs'))</TargetFrameworkMonikerAssemblyAttributesPath>
     </PropertyGroup>
 
     <ItemGroup>
