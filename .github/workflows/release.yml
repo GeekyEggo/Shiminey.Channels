@@ -43,7 +43,7 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: nupkg
-        path: dist/Shiminey.Channels.1.2.3.nupkg
+        path: dist/Shiminey.Channels.${{ steps.branch_name.outputs.TAG }}.nupkg
         retention-days: 1
 
 #    - name: Push to NuGet
