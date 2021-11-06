@@ -9,8 +9,12 @@
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>    
     <PackageProjectUrl>https://github.com/GeekyEggo/Shiminey.Channels</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GeekyEggo/Shiminey.Channels</RepositoryUrl>
-    <Description>Shiminey.Channels is a lightweight set of classes designed to extend and complement the existing System.Threading.Channels library, with a focus on allowing greater control of ordering elements within a channel.</Description>
+    <Description>A lightweight set of classes designed to extend and complement the existing System.Threading.Channels library, with a focus on allowing greater control of ordering elements within a channel.</Description>
     <PackageTags>dotnet,threading,channels</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
   <ItemGroup>

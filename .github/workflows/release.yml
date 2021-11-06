@@ -37,7 +37,7 @@ jobs:
       run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/v}
 
     - name: Pack
-      run: dotnet pack -c Release -p:Version=${{ steps.branch_name.outputs.TAG }} -p:PackageOutputPath="../../dist"
+      run: dotnet pack -p:Version=${{ steps.branch_name.outputs.TAG }} -p:PackageOutputPath="../../dist"
 
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v2
