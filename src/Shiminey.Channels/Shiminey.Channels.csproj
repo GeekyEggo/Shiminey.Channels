@@ -9,18 +9,20 @@
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>    
     <PackageProjectUrl>https://github.com/GeekyEggo/Shiminey.Channels</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GeekyEggo/Shiminey.Channels</RepositoryUrl>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>Shiminey.Channels is a lightweight set of classes designed to extend and complement the existing System.Threading.Channels library, with a focus on allowing greater control of ordering elements within a channel.</Description>
     <PackageTags>dotnet,threading,channels</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="System.Threading.Channels" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\LICENSE.md" Pack="true" PackagePath=""/>
-    <None Include="..\..\README.md" Pack="true" PackagePath=""/>
+    <None Include="..\..\LICENSE.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>
