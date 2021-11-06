@@ -14,7 +14,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shiminey.Channels.Tests", "tests\Shiminey.Channels.Tests\Shiminey.Channels.Tests.csproj", "{AEF7E881-C170-41A8-A403-EA18BB75ED17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shiminey.Channels.Tests", "tests\Shiminey.Channels.Tests\Shiminey.Channels.Tests.csproj", "{AEF7E881-C170-41A8-A403-EA18BB75ED17}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{C3C76E75-9FE6-4750-8B72-7A9FDB769D1D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{20776979-58F6-4561-B635-91553811C68B}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +40,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C3C76E75-9FE6-4750-8B72-7A9FDB769D1D} = {5254DD08-989D-48AB-96EF-6066D53D722E}
+		{20776979-58F6-4561-B635-91553811C68B} = {C3C76E75-9FE6-4750-8B72-7A9FDB769D1D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F369441C-B64E-4767-AC91-7C907C8913B2}
