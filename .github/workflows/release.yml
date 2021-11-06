@@ -37,13 +37,13 @@ jobs:
       run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/v}
 
     - name: Pack
-      run: dotnet pack -p:Version=${{ steps.branch_name.outputs.TAG }} -p:PackageOutputPath="../../dist"
+      run: dotnet pack -p:Version=${{ steps.branch_name.outputs.TAG }} -p:PackageOutputPath="../../dist" -p:ContinuousIntegrationBuild=true
 
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v2
       with:
-        name: nupkg
-        path: dist/Shiminey.Channels.${{ steps.branch_name.outputs.TAG }}.nupkg
+        name: package
+        path: dist/*
         retention-days: 1
 
 #    - name: Push to NuGet
