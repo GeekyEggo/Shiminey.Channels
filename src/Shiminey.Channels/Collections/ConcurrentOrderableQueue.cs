@@ -51,7 +51,7 @@
         /// <summary>
         /// Gets or sets the the task completion source that is fulfilled when the <see cref="ConcurrentOrderableQueue{T}"/> is not empty.
         /// </summary>
-        private TaskCompletionSource<T> NotEmptyTaskCompletionSource { get; set; } = new TaskCompletionSource<T>();
+        private TaskCompletionSource<T> NotEmptyAwaiter { get; set; } = new TaskCompletionSource<T>();
 
         /// <summary>
         /// Removes all items from the <see cref="ConcurrentOrderableQueue{T}"/>.
@@ -61,6 +61,7 @@
             lock (this.SyncRoot)
             {
                 this.Items.Clear();
+                this.ValidateNotEmptyAwaiter();
             }
         }
 
@@ -74,7 +75,7 @@
             lock (this.SyncRoot)
             {
                 var enqueuedItem = new ConcurrentOrderableQueueItemController<T>(this, this.Items.AddLast(item));
-                this.NotEmptyTaskCompletionSource?.TrySetResult(item);
+                this.NotEmptyAwaiter.TrySetResult(item);
 
                 return enqueuedItem;
             }
@@ -114,12 +115,7 @@
                 result = this.Items.First.Value;
                 this.Items.RemoveFirst();
 
-                if (this.Items.Count == 0
-                    && this.NotEmptyTaskCompletionSource.Task.IsCompleted)
-                {
-                    this.NotEmptyTaskCompletionSource = new TaskCompletionSource<T>();
-                }
-
+                this.ValidateNotEmptyAwaiter();
                 return true;
             }
         }
@@ -130,7 +126,7 @@
         /// <param name="cancellationToken">The optional cancellation token.</param>
         public async Task WaitToReadAsync(CancellationToken cancellationToken = default)
         {
-            Task task;
+            Task notEmptyTask;
             lock (this.SyncRoot)
             {
                 if (this.Items.Count > 0)
@@ -138,12 +134,12 @@
                     return;
                 }
 
-                task = this.NotEmptyTaskCompletionSource.Task;
+                notEmptyTask = this.NotEmptyAwaiter.Task;
             }
 
             using var cts = new CancellationTokenTaskSource(cancellationToken);
             {
-                await Task.WhenAny(task, cts.Task).ConfigureAwait(false);
+                await Task.WhenAny(notEmptyTask, cts.Task).ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
             }
         }
@@ -154,5 +150,20 @@
         /// <returns>An <see cref="IEnumerator"></see> object that can be used to iterate through the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
             => this.GetEnumerator();
+
+        /// <summary>
+        /// Validates <see cref="NotEmptyAwaiter"/>; when no items remain, and the task has previously completed, it is reset to a new source.
+        /// </summary>
+        private void ValidateNotEmptyAwaiter()
+        {
+            lock (this.SyncRoot)
+            {
+                if (this.Items.Count == 0
+                    && this.NotEmptyAwaiter.Task.IsCompleted)
+                {
+                    this.NotEmptyAwaiter = new TaskCompletionSource<T>();
+                }
+            }
+        }
     }
 }
