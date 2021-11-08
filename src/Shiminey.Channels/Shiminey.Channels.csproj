@@ -5,8 +5,8 @@
     <IncludeSymbols>true</IncludeSymbols>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	  <Authors>Richard Herman</Authors>
-    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>    
+	<Authors>Richard Herman</Authors>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/GeekyEggo/Shiminey.Channels</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GeekyEggo/Shiminey.Channels</RepositoryUrl>
@@ -19,7 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Threading.Channels" Version="5.0.0" />
+    <PackageReference Include="System.Threading.Channels" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
