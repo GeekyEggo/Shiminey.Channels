@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\.editorconfig" Visible="false" />
     <ProjectReference Include="..\..\src\Shiminey.Channels\Shiminey.Channels.csproj" />
   </ItemGroup>
 
